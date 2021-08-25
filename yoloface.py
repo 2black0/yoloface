@@ -27,19 +27,13 @@ from utils import *
 
 #####################################################################
 parser = argparse.ArgumentParser()
-parser.add_argument('--model-cfg', type=str, default='./cfg/yolov3-face.cfg',
-                    help='path to config file')
-parser.add_argument('--model-weights', type=str,
-                    default='./model-weights/yolov3-wider_16000.weights',
-                    help='path to weights of model')
-parser.add_argument('--image', type=str, default='',
-                    help='path to image file')
-parser.add_argument('--video', type=str, default='',
-                    help='path to video file')
-parser.add_argument('--src', type=int, default=0,
-                    help='source of the camera')
-parser.add_argument('--output-dir', type=str, default='outputs/',
-                    help='path to the output directory')
+parser.add_argument('--model-cfg', type=str, default='./cfg/yolov3-face.cfg', help='path to config file')
+parser.add_argument('--model-weights', type=str, default='./model-weights/yolov3-wider_16000.weights', help='path to weights of model')
+parser.add_argument('--image', type=str, default='', help='path to image file')
+parser.add_argument('--video', type=str, default='', help='path to video file')
+parser.add_argument('--src', type=int, default=0, help='source of the camera')
+parser.add_argument('--output-dir', type=str, default='outputs/', help='path to the output directory')
+parser.add_argument('--vsize', nargs='+', type=int, default=[640, 480])
 args = parser.parse_args()
 
 #####################################################################
@@ -66,7 +60,7 @@ net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
 
 def _main():
-    wind_name = 'face detection using YOLOv3'
+    wind_name = 'Drone Following using YOLOv3'
     cv2.namedWindow(wind_name, cv2.WINDOW_NORMAL)
 
     output_file = ''
@@ -86,6 +80,8 @@ def _main():
     else:
         # Get data from the camera
         cap = cv2.VideoCapture(args.src)
+        cap.set(3, args.vsize[0])
+        cap.set(4, args.vsize[1])
 
     # Get the video writer initialized to save the output video
     if not args.image:
@@ -96,7 +92,6 @@ def _main():
                                            round(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))))
 
     while True:
-
         has_frame, frame = cap.read()
 
         # Stop the program if reached end of video
