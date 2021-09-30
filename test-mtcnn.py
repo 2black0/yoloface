@@ -2,7 +2,7 @@ from mtcnn import MTCNN
 import cv2
 
 detector = MTCNN()
-video_capture = cv2.VideoCapture(1)
+video_capture = cv2.VideoCapture(0)
  
 while (True):
     ret, frame = video_capture.read()
